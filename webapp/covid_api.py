@@ -20,7 +20,7 @@ def get_covid_data(country_arr):
 
     # проверка получения данных по стране, а не по всему миру
     if 'All' not in covid_info_from_api:
-        log.logging.info(f'Covid data is not exist, country code {country_arr}')
+        log.logging.info(f'Covid data does not exist, country code {country_arr}')
         return {}
     cathegories_exist = set(covid_info_from_api['All'])
     cathegories_needed = set(['population', 'confirmed', 'deaths'])

@@ -24,30 +24,27 @@ def check_signin():
 def process_country():
     form = CounryChoose()
     if form.validate_on_submit():
-        form.country_dep
         select_dep = request.form.get('country_dep')
         select_arr = request.form.get('country_arr')
     if select_dep != select_arr:
         choice = UserRequest(user_id=current_user.id, country_dep=select_dep, country_arr=select_arr)
-
         db.session.add(choice)
         db.session.commit()
-        country = Country.query.filter_by(country_name=select_arr).first()
-        log.logging.info(country.id)
+        log.logging.info(choice)
         return redirect(url_for('country_related.country_request'))
-    else:
-        flash('одинаковые страны, попробуйте еще')
-        return redirect(url_for('main_page.display'))
+    flash('Вы указали одинаковые страны, попробуйте еще')
+    return redirect(url_for('main_page.display'))
 
 
 @blueprint.route('/process_country_from_list')
 def process_country_from_list():
     id = int(request.args.get('identifier'))
     open_countries = get_open_countries()
-    select_dep = 'Россия'
     for element in open_countries:
         if element['country_id'] == id:
             select_arr = element['country_name']
+            break
+    select_dep = 'Россия'
     choice = UserRequest(user_id=current_user.id, country_dep=select_dep, country_arr=select_arr)
     db.session.add(choice)
     db.session.commit()
@@ -58,9 +55,9 @@ def process_country_from_list():
 @login_required
 def country_request():
     title = f'Актуальная информация по странам'
-    que = UserRequest.query.filter(UserRequest.user_id==current_user.id).order_by(UserRequest.id.desc()).limit(1)
-    dep = que[0].country_dep
-    arr = que[0].country_arr
+    que = UserRequest.query.filter(UserRequest.user_id==current_user.id).order_by(UserRequest.id.desc()).limit(1)[0]
+    dep = que.country_dep
+    arr = que.country_arr
     restrictions_by_country = country_conditions_request(arr)
     covid_data = country_covid_request(arr)
     return render_template('country/country_request.html', page_title=title, 
@@ -99,7 +96,6 @@ def country_conditions_request(arr):
 
 
 def get_open_countries(countries_list=get_countries_rosturizm()):
-    # countries_list = get_countries_rosturizm()
     country_to_id_mapping = []
     for country in countries_list:
         country_from_db = Country.query.filter_by(country_name=country).first()
@@ -109,7 +105,6 @@ def get_open_countries(countries_list=get_countries_rosturizm()):
             countries_data['country_name'] = country_from_db.country_name
             country_to_id_mapping.append(countries_data)
     log.logging.info(country_to_id_mapping)
-
     return country_to_id_mapping
 
 

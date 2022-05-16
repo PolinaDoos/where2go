@@ -7,7 +7,6 @@ from random import choice
 def get_tuple_info_rosturizm(country_arr):
     url = "https://city.russia.travel/safety/kakie_strany_otkryty/"
     html = get_html(url)
-    print(html)
     if not html:
         return None
     data = parse_conditions_rosturizm(html, country_arr)

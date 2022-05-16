@@ -55,11 +55,11 @@ def get_accepted_countries(html):
     all_published_countries = []
     open_countries = []
     soup = BeautifulSoup(html, 'html.parser')
-    all_published_countries = soup.findAll('div', class_='t537__persname t-name t-name_lg t537__bottommargin_sm')
+    all_published_countries = soup.findAll('div', class_='t336__title t-title t-title_md')
     for country_object in all_published_countries:
         open_countries.append(country_object.text)
-        open_countries.sort()
-    return open_countries
+    open_countries = set(open_countries)
+    return sorted(open_countries)
 
 
 def parse_conditions_rosturizm(html, country_arr):

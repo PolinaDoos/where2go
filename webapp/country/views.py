@@ -98,18 +98,15 @@ def country_conditions_request(arr):
             return transportation, visa, vaccine, conditions, open_objects, restrictions, 'unusual'
 
 
-def get_open_countries():
-    countries_list = get_countries_rosturizm()
+def get_open_countries(countries_list=get_countries_rosturizm()):
+    # countries_list = get_countries_rosturizm()
     country_to_id_mapping = []
     for country in countries_list:
-        log.logging.info(country)
         country_from_db = Country.query.filter_by(country_name=country).first()
         countries_data = {}
         if country_from_db:
-            log.logging.info(country_from_db.country_name)
             countries_data['country_id'] = country_from_db.id
             countries_data['country_name'] = country_from_db.country_name
-            log.logging.info(countries_data)
             country_to_id_mapping.append(countries_data)
     log.logging.info(country_to_id_mapping)
 
@@ -120,7 +117,7 @@ def get_open_countries():
 def display_countries_list():
     title = f"Какие страны открыты для россиян"
     countries_list = get_countries_rosturizm()
-    country_to_id_mapping = get_open_countries()
+    country_to_id_mapping = get_open_countries(countries_list)
 
     return render_template('country/country_list.html', page_title=title, countries_list=countries_list,
                             country_to_id_mapping=country_to_id_mapping)

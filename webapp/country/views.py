@@ -100,6 +100,7 @@ def country_conditions_request(arr):
 def get_open_countries(countries_list=get_countries_rosturizm()):
     country_to_id_mapping = []
     for country in countries_list:
+        # посмотреть, как ускорить эту череду запросов
         country_from_db = Country.query.filter_by(country_name=country).first()
         countries_data = {}
         if country_from_db:

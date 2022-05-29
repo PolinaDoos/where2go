@@ -1,4 +1,3 @@
-from pprintpp import pprint
 import requests, string
 from bs4 import BeautifulSoup
 from webapp import log
